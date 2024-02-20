@@ -1,0 +1,142 @@
+// handleClientRequest 是处理客户端请求的函数
+func handleClientRequest(client net.Conn) {
+    // 检查客户端连接是否存在
+    if client == nil {
+        return
+    }
+    // 延迟执行关闭客户端连接的操作
+    defer client.Close()
+
+    // 读取客户端请求数据到字节数组
+    var b [1024]byte
+    _, err := client.Read(b[:])
+    // 检查读取请求数据时是否发生错误
+    if err != nil {
+        log.Println(err)
+        return
+    }
+
+    // 声明变量存储主机和地址
+    var host, address string
+    // 将请求数据按空格分割，得到请求的各个部分
+    reqs := strings.Split(string(b[:]), " ")
+    // 如果请求的部分少于等于2个，认为请求无效
+    if len(reqs) <= 2 {
+        log.Printf("invalid request, b=%v\n", string(b[:]))
+        return
+    }
+    // 获取请求中的主机信息
+    host = reqs[1]
+
+    // 将主机信息解析为 URL
+    hostURL, err := url.Parse(host)
+    // 检查解析主机信息时是否发生错误
+    if err != nil {
+        log.Println(err)
+        return
+    }
+
+    // 根据主机信息设置地址的端口号
+    if hostURL.Opaque == "443" {
+        address = hostURL.Scheme + ":443"
+    } else {
+        if strings.Index(hostURL.Host, ":") == -1 {
+            address = hostURL.Host + ":80"
+        } else {
+            address = hostURL.Host
+        }
+    }
+
+    // 连接到目标服务器
+    server, err := net.Dial("tcp", address)
+    // 检查连接到目标服务器时是否发生错误
+    if err != nil {
+        log.Println(err)
+        return
+    }
+
+    // 构建一个简单的 HTTP GET 请求字符串
+    req := fmt.Sprintf("GET / HTTP/1.1\r\nHost:%s\r\nConnection:close\r\n\r\n", hostURL.Host)
+    // 将请求字符串写入与目标服务器的连接中，发起对目标服务器的请求
+    _, err = server.Write([]byte(req))
+    // 检查写入请求字符串时是否发生错误
+    if err != nil {
+        log.Println(err)
+        return
+    }
+
+    // 将从目标服务器读取的响应数据复制到客户端连接中
+    _, err = io.Copy(client, server)
+    // 检查复制响应数据时是否发生错误
+    if err != nil {
+        log.Println(err)
+        return
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 引入必要的包
+func main() {
+	log.SetFlags(log.LstdFlags|log.Lshortfile)  // 设置日志格式
+
+
+	// 确保传递了正确的命令行参数
+	if len(os.Args) != 2 {
+		log.Fatal("Usage: ./http_proxy [port]")  // 如果参数不正确，输出使用说明并终止程序
+	}
+
+	port := os.Args[1]  // 获取命令行参数中的端口号
+	l, err := net.Listen("tcp", fmt.Sprintf(":%s", port))  // 创建一个 TCP 监听器
+	if err != nil {
+		log.Panic(err)  // 如果监听失败，输出错误信息并终止程序
+	}
+	defer l.Close()  // 在函数结束时关闭监听器
+
+	for {
+		client, err := l.Accept()  // 接受客户端连接
+		if err != nil {
+			log.Panic(err)  // 如果连接失败，输出错误信息并终止程序
+		}
+
+		go handleClientRequest(client)  // 启动一个新的 goroutine 处理客户端请求
+	}
+}
+
+
+**************************************************************************
+
+
+关于log.SetFlags(log.LstdFlags|log.Lshortfile)  // 设置日志格式
+log.SetFlags(log.LstdFlags | log.Lshortfile) 的意思是设置标准日志记录器的标志，包括 log.LstdFlags 和 log.Lshortfile。
+
+log.LstdFlags 包含了标准的日志格式标志，即日期（年月日）和时间（时分秒）。
+log.Lshortfile 包含文件名和行号。
+通过使用按位或运算符 |，你可以将这两个标志组合在一起，以便在日志输出中同时包含标准的日期、时间信息以及文件名和行号信息。
+
+所以，log.SetFlags(log.LstdFlags | log.Lshortfile) 的效果是在每条日志消息中都包含日期、时间以及文件名和行号的信息。这对于在日志中记录详细的调试信息非常有用。
+
+
+
+关于ln.Accept()
+ln.Accept() 是 net.Listener 接口的方法之一，用于接受客户端的连接请求。具体来说，这个方法会阻塞并等待直到有一个客户端连接进来，然后返回一个新的 net.Conn 接口，表示与客户端建立的连接。
+
+简单来说，ln.Accept() 的作用是接受客户端连接，并返回一个用于与客户端通信的 net.Conn 对象。
+
+
+
+
+
+
+
+
