@@ -1,0 +1,116 @@
+vagrant@cos461:/vagrant/assignment1/client_server$ ./test_client_server.sh python 11111
+================================================================
+Testing C client against C server (1/4)
+================================================================
+
+1. TEST SHORT MESSAGE
+
+SUCCESS: Message received matches message sent!
+________________________________________
+
+2. TEST RANDOM ALPHANUMERIC MESSAGE
+
+SUCCESS: Message received matches message sent!
+________________________________________
+
+3. TEST RANDOM BINARY MESSAGE
+
+SUCCESS: Message received matches message sent!
+________________________________________
+
+4. TEST SERVER INFINITE LOOP (multiple sequential clients to same server)
+
+SUCCESS: Message received matches message sent!
+________________________________________
+
+5. TEST SERVER QUEUE (overlapping clients to same server)
+
+SUCCESS: Message received matches message sent!
+
+================================================================
+Testing Python client against Python server (2/4)
+================================================================
+
+6. TEST SHORT MESSAGE
+
+SUCCESS: Message received matches message sent!
+________________________________________
+
+7. TEST RANDOM ALPHANUMERIC MESSAGE
+
+SUCCESS: Message received matches message sent!
+________________________________________
+
+8. TEST RANDOM BINARY MESSAGE
+
+SUCCESS: Message received matches message sent!
+________________________________________
+
+9. TEST SERVER INFINITE LOOP (multiple sequential clients to same server)
+
+SUCCESS: Message received matches message sent!
+________________________________________
+
+10. TEST SERVER QUEUE (overlapping clients to same server)
+
+SUCCESS: Message received matches message sent!
+
+================================================================
+Testing C client against Python server (3/4)
+================================================================
+
+11. TEST SHORT MESSAGE
+
+SUCCESS: Message received matches message sent!
+________________________________________
+
+12. TEST RANDOM ALPHANUMERIC MESSAGE
+
+SUCCESS: Message received matches message sent!
+________________________________________
+
+13. TEST RANDOM BINARY MESSAGE
+
+SUCCESS: Message received matches message sent!
+________________________________________
+
+14. TEST SERVER INFINITE LOOP (multiple sequential clients to same server)
+
+SUCCESS: Message received matches message sent!
+________________________________________
+
+15. TEST SERVER QUEUE (overlapping clients to same server)
+
+SUCCESS: Message received matches message sent!
+
+================================================================
+Testing Python client against C server (4/4)
+================================================================
+
+16. TEST SHORT MESSAGE
+
+SUCCESS: Message received matches message sent!
+________________________________________
+
+17. TEST RANDOM ALPHANUMERIC MESSAGE
+
+SUCCESS: Message received matches message sent!
+________________________________________
+
+18. TEST RANDOM BINARY MESSAGE
+
+SUCCESS: Message received matches message sent!
+________________________________________
+
+19. TEST SERVER INFINITE LOOP (multiple sequential clients to same server)
+
+SUCCESS: Message received matches message sent!
+________________________________________
+
+20. TEST SERVER QUEUE (overlapping clients to same server)
+
+SUCCESS: Message received matches message sent!
+
+================================================================
+
+TESTS PASSED: 20/20
